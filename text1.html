@@ -1,0 +1,75 @@
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+# Substitua "YOUR_BOT_API_TOKEN" pelo Token do seu bot (obtido pelo BotFather)
+BOT_API_TOKEN = "8032455302:AAGW6_WSwMb2S43ruPm4Uzf6FpIYp0O0gjk"
+
+# Função inicial do comando /start
+def start(update: Update, context: CallbackContext) -> None:
+    user = update.effective_user
+    update.message.reply_text(
+        f"Olá, {user.first_name}! 👋\n"
+        "Bem-vindo ao bot de vendas do YouTube Premium.\n\n"
+        "Use os botões abaixo para navegar:\n"
+        "✔️ *Planos Disponíveis*\n"
+        "💬 *Falar com Suporte*\n"
+        "🚀 *Comprar Agora*",
+        reply_markup=ReplyKeyboardMarkup(
+            [["Planos Disponíveis", "Falar com Suporte"], ["Comprar Agora"]],
+            resize_keyboard=True,
+            one_time_keyboard=False,
+        ),
+    )
+
+# Função para exibir planos
+def planos(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(
+        "📋 *Planos Disponíveis:*\n\n"
+        "1️⃣ *Plano Individual*: R$ 10/mês\n"
+        "🚀 *Pronto para adquirir? Use o botão Comprar Agora!*"
+    )
+
+# Função para comprar
+def comprar(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(
+        "💳 *Como Comprar:*\n\n"
+        "1️⃣ Escolha o plano desejado.\n"
+        "2️⃣ Envie o pagamento via PIX para:\n"
+        "`11911860510`\n"
+        "3️⃣ Envie o comprovante aqui no chat.\n\n"
+        "🔔 Após a confirmação, enviaremos sua conta Premium!"
+    )
+
+# Função para suporte
+def suporte(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(
+        "📞 *Fale com nosso suporte:*\n\n"
+        "👉 Clique aqui: [Suporte no Telegram](https://t.me/seu_suporte)\n\n"
+        "Estamos disponíveis para tirar todas as suas dúvidas!"
+    )
+
+# Função para lidar com mensagens não reconhecidas
+def unknown(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(
+        "Desculpe, não entendi essa mensagem. Use os botões para navegar!"
+    )
+
+# Configuração principal
+def main():
+    # Configuração do bot
+    updater = Updater(BOT_API_TOKEN)
+    dispatcher = updater.dispatcher
+
+    # Handlers
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(MessageHandler(Filters.regex("^(Planos Disponíveis)$"), planos))
+    dispatcher.add_handler(MessageHandler(Filters.regex("^(Comprar Agora)$"), comprar))
+    dispatcher.add_handler(MessageHandler(Filters.regex("^(Falar com Suporte)$"), suporte))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, unknown))
+
+    # Inicia o bot
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == "__main__":
+    main()
