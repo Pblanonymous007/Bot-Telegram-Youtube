@@ -1,3 +1,4 @@
 git init
 git add .
 git commit -m "Primeiro commit do bot"
+git remote add origin https://github.com/Pblanonymous007/Bot-Telegram-Youtube.git
